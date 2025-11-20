@@ -1,22 +1,59 @@
 
 import React from 'react';
+import type { Difficulty } from '../types';
+import { DIFFICULTY_SETTINGS } from '../constants';
 
 interface WelcomeScreenProps {
   onStart: () => void;
+  difficulty: Difficulty;
+  setDifficulty: (d: Difficulty) => void;
 }
 
-const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
+const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart, difficulty, setDifficulty }) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center text-center p-4">
       <h1 className="text-5xl md:text-7xl font-bold text-blue-800 mb-4 drop-shadow-lg">
-        Math Hangman for 3rd Grade
+        Math Hangman
       </h1>
+      <h2 className="text-2xl text-blue-600 font-bold mb-6">Third Grade Edition</h2>
+      
       <p className="text-lg md:text-xl text-blue-600 mb-8 max-w-xl">
         Read the definition, guess the letters, and solve the math vocabulary word before the hangman is complete!
       </p>
+
+      <div className="mb-8 w-full max-w-md">
+        <p className="text-blue-800 font-bold mb-3 uppercase tracking-wide text-sm">Select Difficulty</p>
+        <div className="flex gap-3 justify-center">
+          {(Object.keys(DIFFICULTY_SETTINGS) as Difficulty[]).map((level) => {
+            const config = DIFFICULTY_SETTINGS[level];
+            const isSelected = difficulty === level;
+            
+            return (
+              <button
+                key={level}
+                onClick={() => setDifficulty(level)}
+                className={`flex-1 py-3 px-2 rounded-xl font-bold transition-all transform border-2 
+                  ${isSelected 
+                    ? `${config.color} text-white border-transparent scale-105 shadow-lg ring-2 ring-offset-2 ring-blue-200` 
+                    : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                  }`}
+              >
+                <div className="text-lg">{level}</div>
+                <div className={`text-[10px] uppercase mt-1 ${isSelected ? 'text-white/90' : 'text-gray-400'}`}>
+                    {config.maxGuesses} Guesses
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-sm text-gray-500 mt-3 italic min-h-[1.5rem]">
+            {DIFFICULTY_SETTINGS[difficulty].description}
+        </p>
+      </div>
+
       <button
         onClick={onStart}
-        className="px-10 py-4 bg-green-500 text-white font-bold text-2xl rounded-xl shadow-lg hover:bg-green-600 transition-all transform hover:scale-105"
+        className="px-12 py-4 bg-blue-600 text-white font-bold text-2xl rounded-2xl shadow-xl hover:bg-blue-700 transition-all transform hover:scale-105 hover:shadow-2xl"
       >
         Start Game
       </button>
