@@ -11,12 +11,12 @@ const Keyboard: React.FC<KeyboardProps> = ({ onGuess, guessedLetters }) => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
   return (
-    <div className="flex flex-wrap justify-center gap-1 md:gap-1.5 max-w-lg mx-auto py-1">
+    <div className="flex flex-wrap justify-center gap-0.5 md:gap-1 max-w-md mx-auto py-0.5">
       {alphabet.map((letter) => {
         const isGuessed = guessedLetters.correct.includes(letter) || guessedLetters.incorrect.includes(letter);
         const isCorrect = guessedLetters.correct.includes(letter);
         
-        const baseClass = "w-8 h-9 md:w-10 md:h-10 text-base md:text-lg font-bold rounded md:rounded-lg shadow-sm transition-all duration-200 transform";
+        const baseClass = "w-7 h-8 md:w-8 md:h-9 text-sm md:text-base font-bold rounded shadow-sm transition-all duration-200 transform";
         
         const stateClass = isGuessed
           ? (isCorrect 

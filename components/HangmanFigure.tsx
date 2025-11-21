@@ -33,7 +33,7 @@ const HangmanFigure: React.FC<HangmanFigureProps> = ({ wrongGuesses, maxGuesses 
   const partsToShowCount = wrongGuesses === 0 ? 0 : Math.ceil(percentComplete * totalParts);
 
   return (
-    <div className="relative w-32 h-40 md:w-40 md:h-48 lg:w-52 lg:h-64 transition-all duration-300 ease-in-out hover:scale-105 hover:drop-shadow-xl">
+    <div className="relative w-24 h-32 md:w-32 md:h-40 lg:w-40 lg:h-52 transition-all duration-300 ease-in-out hover:scale-105 hover:drop-shadow-xl">
       <svg viewBox="0 0 200 250" className="w-full h-full text-gray-800">
         {/* Gallows Structure - Wood Styling */}
         <g className="text-amber-800">

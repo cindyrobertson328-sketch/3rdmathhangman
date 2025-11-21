@@ -160,7 +160,7 @@ const App: React.FC = () => {
       const fetchedWords = await fetchMathWords(difficulty);
       setWords(fetchedWords);
     } catch (err) {
-      setError("Failed to fetch words. Using fallback list.");
+      setError("Failed to fetch words.");
       console.error(err);
     }
   }, [difficulty]);
@@ -228,7 +228,11 @@ const App: React.FC = () => {
     
     if (score < HINT_COST) return; // Double check
 
-    const hiddenLetters = currentWord.word.split('').filter(letter => !guessedLetters.correct.includes(letter));
+    // Only filter for letters (A-Z) that are hidden
+    const hiddenLetters = currentWord.word.split('')
+        .filter(letter => /^[A-Z]$/.test(letter))
+        .filter(letter => !guessedLetters.correct.includes(letter));
+        
     if (hiddenLetters.length === 0) return;
 
     const randomLetter = hiddenLetters[Math.floor(Math.random() * hiddenLetters.length)];
@@ -271,7 +275,12 @@ const App: React.FC = () => {
     if (gameState !== GameState.Playing) return;
 
     const incorrectCount = guessedLetters.incorrect.length;
-    const isWordGuessed = currentWord.word && currentWord.word.split('').every(letter => guessedLetters.correct.includes(letter));
+    
+    // Win Condition: All LETTERS (A-Z) must be guessed. Spaces/Special chars are ignored.
+    const isWordGuessed = currentWord.word && currentWord.word.split('').every(letter => {
+        const isLetter = /^[A-Z]$/.test(letter);
+        return !isLetter || guessedLetters.correct.includes(letter);
+    });
     
     // Use settings for max guesses
     if (incorrectCount >= currentSettings.maxGuesses) {
@@ -315,7 +324,7 @@ const App: React.FC = () => {
     setStreak(0);
     setHistory([]);
     setGameState(GameState.Welcome);
-    // Reset words so they re-fetch if difficulty changes next time
+    // Reset words so they re-fetch/shuffle if difficulty changes next time
     setWords([]); 
   }
   
@@ -341,14 +350,14 @@ const App: React.FC = () => {
                     difficulty={difficulty}
                     setDifficulty={setDifficulty}
                 />
-                <div className="absolute top-4 right-4 flex flex-col md:flex-row gap-4 items-end md:items-center z-20">
+                <div className="absolute top-2 right-2 md:top-4 md:right-4 flex flex-col md:flex-row gap-2 items-end md:items-center z-20">
                    <button 
                         onClick={() => setShowStats(true)}
-                        className="bg-white/80 hover:bg-white text-blue-900 font-bold py-2 px-4 rounded-full shadow-sm transition-all flex items-center gap-2"
+                        className="bg-white/80 hover:bg-white text-blue-900 font-bold py-1.5 px-3 rounded-full shadow-sm transition-all flex items-center gap-2 text-sm"
                    >
-                        <span className="text-xl">📊</span> Stats
+                        <span className="text-lg">📊</span> Stats
                    </button>
-                   <div className="flex gap-2">
+                   <div className="flex gap-2 scale-90 md:scale-100 origin-right">
                         <ToggleSwitch label="🔊 Sound" isChecked={isSoundEnabled} onChange={setIsSoundEnabled} />
                         <ToggleSwitch label="⏱️ Timer" isChecked={isTimerEnabled} onChange={setIsTimerEnabled} />
                    </div>
@@ -359,8 +368,8 @@ const App: React.FC = () => {
       case GameState.Loading:
         return (
           <div className="flex flex-col items-center justify-center h-full animate-slide-up">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-            <p className="mt-4 text-xl text-blue-700 font-bold">Loading {difficulty} Math Words...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+            <p className="mt-4 text-lg text-blue-700 font-bold">Loading Math Words...</p>
           </div>
         );
       case GameState.Playing:
@@ -370,7 +379,7 @@ const App: React.FC = () => {
         const isSkipAvailable = guessedLetters.incorrect.length >= SKIP_MIN_WRONG_GUESSES || (isTimerEnabled && timeLeft <= SKIP_MAX_TIME_LEFT);
         
         return (
-          <div key={gameId} className="relative w-full h-full flex flex-col items-center p-1 md:p-2 text-center animate-slide-up overflow-hidden">
+          <div key={gameId} className="relative w-full h-full flex flex-col items-center p-1 text-center animate-slide-up overflow-hidden">
             {(gameState === GameState.Won || gameState === GameState.Lost) && (
               <Modal 
                 status={gameState === GameState.Won ? 'won' : 'lost'} 
@@ -408,7 +417,7 @@ const App: React.FC = () => {
 
             {feedbackMessage && (
               <div className="absolute top-24 left-0 right-0 flex justify-center z-20 pointer-events-none">
-                <div className="bg-yellow-400 text-yellow-900 font-bold px-6 py-2 rounded-full shadow-lg border-4 border-yellow-200 animate-bounce-in text-lg md:text-xl">
+                <div className="bg-yellow-400 text-yellow-900 font-bold px-4 py-1.5 rounded-full shadow-lg border-4 border-yellow-200 animate-bounce-in text-base md:text-lg">
                   {feedbackMessage}
                 </div>
               </div>
@@ -417,15 +426,15 @@ const App: React.FC = () => {
             {/* Exit Button (Top Left) */}
             <button 
                 onClick={() => setShowExitConfirmation(true)}
-                className="absolute top-3 left-3 md:top-4 md:left-4 flex items-center gap-2 px-4 py-2 bg-red-100 text-red-800 hover:bg-red-200 border-2 border-red-200 font-bold rounded-xl text-sm md:text-base transition-transform hover:scale-105 shadow-md z-50"
+                className="absolute top-2 left-2 flex items-center gap-1 px-3 py-1.5 bg-red-100 text-red-800 hover:bg-red-200 border-2 border-red-200 font-bold rounded-xl text-xs md:text-sm transition-transform hover:scale-105 shadow-md z-50"
                 aria-label="Exit Game"
             >
-                <span className="text-lg">🚪</span> Exit
+                <span className="text-base">🚪</span> Exit
             </button>
 
-            <div className="w-full flex justify-end px-4 pt-1 gap-2 absolute top-1 right-2 z-10">
+            <div className="w-full flex justify-end px-2 pt-1 gap-2 absolute top-1 right-1 z-10 scale-90 md:scale-100 origin-top-right">
                {/* Difficulty Badge */}
-               <div className={`px-3 py-1 rounded-full text-white font-bold text-xs uppercase shadow-sm flex items-center ${currentSettings.color}`}>
+               <div className={`px-2 py-0.5 rounded-full text-white font-bold text-[10px] uppercase shadow-sm flex items-center ${currentSettings.color}`}>
                   {difficulty}
                </div>
                <ToggleSwitch label="🔊" isChecked={isSoundEnabled} onChange={setIsSoundEnabled} />
@@ -433,58 +442,58 @@ const App: React.FC = () => {
             </div>
 
             {/* Header Bar */}
-            <header className="w-full flex flex-row justify-center items-center px-4 py-1 shrink-0 gap-3 md:gap-6 mt-12 md:mt-8 mb-2 z-10 relative">
+            <header className="w-full flex flex-row justify-center items-center px-2 py-1 shrink-0 gap-2 md:gap-4 mt-10 md:mt-6 mb-1 z-10 relative">
                 <Tooltip content="Current Score">
-                    <div className="bg-yellow-400 text-yellow-900 font-bold text-base md:text-xl px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-md flex items-center border-2 border-yellow-300 cursor-help">
-                        <span className="mr-2 text-xl md:text-2xl">⭐</span> {score}
+                    <div className="bg-yellow-400 text-yellow-900 font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center border-2 border-yellow-300 cursor-help">
+                        <span className="mr-1.5 text-lg">⭐</span> {score}
                     </div>
                 </Tooltip>
                 
                 <Tooltip content="Words Solved">
-                    <div className="bg-green-400 text-green-900 font-bold text-base md:text-xl px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-md flex items-center border-2 border-green-300 cursor-help">
-                        <span className="mr-2 text-xl md:text-2xl">📚</span> {wordsSolved}
+                    <div className="bg-green-400 text-green-900 font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center border-2 border-green-300 cursor-help">
+                        <span className="mr-1.5 text-lg">📚</span> {wordsSolved}
                     </div>
                 </Tooltip>
                 
                 <Tooltip content="Winning Streak">
-                    <div className="bg-orange-400 text-orange-900 font-bold text-base md:text-xl px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-md flex items-center border-2 border-orange-300 cursor-help">
-                        <span className="mr-2 text-xl md:text-2xl">🔥</span> {streak}
+                    <div className="bg-orange-400 text-orange-900 font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center border-2 border-orange-300 cursor-help">
+                        <span className="mr-1.5 text-lg">🔥</span> {streak}
                     </div>
                 </Tooltip>
 
                 <Tooltip content="Time Remaining">
-                    <div className={`${isLowTime && isTimerEnabled ? 'bg-red-500 text-white animate-pulse' : 'bg-blue-400 text-blue-900'} font-bold text-base md:text-xl px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-md flex items-center transition-colors duration-300 border-2 border-blue-300 ${!isTimerEnabled ? 'opacity-50 grayscale' : ''} cursor-help`}>
-                        <span className="mr-2 text-xl md:text-2xl">⏰</span> {isTimerEnabled ? formatTime(timeLeft) : '--:--'}
+                    <div className={`${isLowTime && isTimerEnabled ? 'bg-red-500 text-white animate-pulse' : 'bg-blue-400 text-blue-900'} font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center transition-colors duration-300 border-2 border-blue-300 ${!isTimerEnabled ? 'opacity-50 grayscale' : ''} cursor-help`}>
+                        <span className="mr-1.5 text-lg">⏰</span> {isTimerEnabled ? formatTime(timeLeft) : '--:--'}
                     </div>
                 </Tooltip>
                 
-                <div className="flex gap-1 ml-2">
+                <div className="flex gap-1 ml-1">
                     <Tooltip content="Statistics">
-                        <button onClick={() => setShowStats(true)} className="p-2 hover:bg-blue-100 rounded-full text-xl md:text-2xl" title="Stats">📊</button>
+                        <button onClick={() => setShowStats(true)} className="p-1.5 hover:bg-blue-100 rounded-full text-lg" title="Stats">📊</button>
                     </Tooltip>
                     <Tooltip content="Word History">
-                        <button onClick={() => setShowHistory(true)} className="p-2 hover:bg-blue-100 rounded-full text-xl md:text-2xl" title="History">📜</button>
+                        <button onClick={() => setShowHistory(true)} className="p-1.5 hover:bg-blue-100 rounded-full text-lg" title="History">📜</button>
                     </Tooltip>
                 </div>
             </header>
 
             {/* Main Game Vertical Stack */}
-            <main className="flex flex-col items-center w-full max-w-2xl px-2 grow h-full overflow-y-auto no-scrollbar z-10 relative">
+            <main className="flex flex-col items-center w-full max-w-2xl px-2 grow h-full overflow-hidden z-10 relative justify-center">
                 
                 {/* 1. Hangman Figure */}
-                <div className="flex flex-col items-center shrink-0 mb-2">
+                <div className="flex flex-col items-center shrink-0 mb-1">
                     <HangmanFigure 
                         wrongGuesses={guessedLetters.incorrect.length} 
                         maxGuesses={currentSettings.maxGuesses}
                     />
                     <IncorrectGuesses incorrectLetters={guessedLetters.incorrect} />
-                    <div className="text-xs text-gray-500 font-bold bg-white/50 px-2 py-0.5 rounded-full">
+                    <div className="text-[10px] text-gray-500 font-bold bg-white/50 px-2 py-0.5 rounded-full mt-0.5">
                         {currentSettings.maxGuesses - guessedLetters.incorrect.length} Attempts Left
                     </div>
                 </div>
 
                 {/* 2. Word Display & Hint */}
-                <div className="flex flex-col items-center w-full mb-4 shrink-0">
+                <div className="flex flex-col items-center w-full mb-2 shrink-0">
                      <WordDisplay 
                         word={currentWord.word} 
                         correctGuesses={guessedLetters.correct} 
@@ -493,41 +502,47 @@ const App: React.FC = () => {
                      <button
                         onClick={handleHintClick}
                         disabled={score < HINT_COST}
-                        className={`mt-1 flex items-center gap-2 px-3 py-0.5 rounded-full font-bold shadow-sm transition-all transform text-xs
+                        className={`mt-0.5 flex items-center gap-2 px-2 py-0.5 rounded-full font-bold shadow-sm transition-all transform text-[10px] md:text-xs
                             ${score >= HINT_COST 
                                 ? 'bg-purple-100 text-purple-700 border border-purple-300 hover:bg-purple-200 hover:scale-105' 
                                 : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'}`}
                     >
-                        <span>💡</span> Hint <span className="text-[9px] bg-purple-200 px-1.5 rounded-full">-{HINT_COST}</span>
+                        <span>💡</span> Hint <span className="text-[9px] bg-purple-200 px-1 rounded-full">-{HINT_COST}</span>
                     </button>
                 </div>
 
                 {/* 3. Definition (Below Word) */}
-                <div className="bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-md border-2 border-blue-100 w-full max-w-lg mb-2 relative flex flex-col items-center justify-center shrink-0">
-                        <h3 className="text-gray-400 text-[10px] uppercase font-bold mb-1 tracking-wider">Definition</h3>
-                        <p className="text-sm md:text-base text-blue-900 font-medium leading-snug text-center px-6">
+                <div className="bg-white/90 backdrop-blur-sm p-2 md:p-3 rounded-xl shadow-md border-2 border-blue-100 w-full max-w-lg mb-1 relative flex flex-col items-center justify-center shrink-0 transition-all duration-300">
+                        <h3 className="text-gray-400 text-[9px] uppercase font-bold mb-1 tracking-wider">Definition</h3>
+                        <p className="text-sm md:text-base text-blue-900 font-medium leading-snug text-center px-2 mb-2 max-h-24 overflow-y-auto custom-scrollbar">
                         {currentWord.definition}
                         </p>
 
-                        <button
-                        onClick={handleSkip}
-                        disabled={!isSkipAvailable}
-                        className={`absolute top-2 right-2 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all
-                            ${isSkipAvailable 
-                                ? 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 hover:shadow-md cursor-pointer' 
-                                : 'bg-gray-50 text-gray-300 cursor-not-allowed'}`}
-                        >
-                        Skip
-                        </button>
+                        <div className="w-full flex justify-center border-t border-blue-50 pt-1 mt-0.5">
+                            <button
+                            onClick={handleSkip}
+                            disabled={!isSkipAvailable}
+                            className={`
+                                flex items-center gap-1.5 px-4 py-1 rounded-full font-bold text-[10px] md:text-xs uppercase tracking-wider shadow-sm transition-all
+                                ${isSkipAvailable 
+                                    ? 'bg-orange-100 text-orange-700 border border-orange-300 hover:bg-orange-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer ring-2 ring-orange-200/50' 
+                                    : 'bg-slate-50 text-slate-300 border border-slate-100 cursor-not-allowed'}
+                            `}
+                            title={!isSkipAvailable ? `Skip available after ${SKIP_MIN_WRONG_GUESSES} mistakes or low time` : 'Skip this word'}
+                            >
+                            <span className={isSkipAvailable ? "animate-bounce" : ""}>⏭️</span> 
+                            {isSkipAvailable ? `Skip Word (-${SKIP_COST} pts)` : 'Skip Word'}
+                            </button>
+                        </div>
                 </div>
 
                 {/* 4. Keyboard (Bottom) */}
-                <div className="mt-auto w-full pb-2 shrink-0">
+                <div className="mt-auto w-full pb-5 md:pb-8 shrink-0">
                      <Keyboard onGuess={handleGuess} guessedLetters={guessedLetters} />
                 </div>
             </main>
             
-            <footer className="mt-auto pb-1 text-blue-400/80 font-bold text-[10px] shrink-0 relative z-10">
+            <footer className="mt-auto pb-0.5 text-blue-400/80 font-bold text-[9px] shrink-0 relative z-10">
                 Math Hangman • Grade 3
             </footer>
           </div>

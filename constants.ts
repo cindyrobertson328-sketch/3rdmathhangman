@@ -7,8 +7,8 @@ export const INITIAL_SCORE = 10;
 
 // Skip Logic Constants
 export const SKIP_COST = 3;
-export const SKIP_MIN_WRONG_GUESSES = 2;
-export const SKIP_MAX_TIME_LEFT = 75; // This might need adjustment based on difficulty, handled in App logic
+export const SKIP_MIN_WRONG_GUESSES = 3;
+export const SKIP_MAX_TIME_LEFT = 30; // Adjusted to 30s so it works well for Hard (60s), Medium (90s), etc.
 
 interface DifficultyConfig {
   maxGuesses: number;
