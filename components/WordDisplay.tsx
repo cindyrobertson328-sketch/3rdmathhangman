@@ -9,7 +9,7 @@ interface WordDisplayProps {
 
 const WordDisplay: React.FC<WordDisplayProps> = ({ word, correctGuesses, revealedLetter }) => {
   return (
-    <div className="flex justify-center gap-1 md:gap-1.5 my-1 flex-wrap px-2">
+    <div className="flex justify-center gap-0.5 md:gap-1 my-0.5 flex-wrap px-1">
       {word.split('').map((letter, index) => {
         const isLetter = /^[A-Z]$/.test(letter);
         const isRevealed = letter === revealedLetter;
@@ -18,9 +18,9 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ word, correctGuesses, reveale
         // If it's not a letter (e.g. space in "WHOLE NUMBER"), render a separator
         if (!isLetter) {
            return (
-             <div key={index} className="flex items-center justify-center w-3 md:w-5 h-8 md:h-12">
+             <div key={index} className="flex items-center justify-center w-2 md:w-4 h-6 md:h-10">
                 {/* Visually hidden but structurally present, or just a gap */}
-                {letter === ' ' ? <span className="w-full"></span> : <span className="text-lg font-bold text-blue-800">{letter}</span>}
+                {letter === ' ' ? <span className="w-full"></span> : <span className="text-base font-bold text-blue-800">{letter}</span>}
              </div>
            );
         }
@@ -39,7 +39,7 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ word, correctGuesses, reveale
         return (
           <span
             key={index}
-            className={`flex items-center justify-center w-7 h-9 md:w-9 md:h-12 text-lg md:text-2xl font-bold rounded md:rounded-md shadow-sm md:shadow-md border-b-2 md:border-b-4 transition-all duration-500 ${stateClasses}`}
+            className={`flex items-center justify-center w-6 h-8 md:w-8 md:h-10 text-base md:text-xl font-bold rounded shadow-sm md:shadow-md border-b-2 md:border-b-4 transition-all duration-500 ${stateClasses}`}
           >
             {isGuessed ? letter : '_'}
           </span>

@@ -442,58 +442,58 @@ const App: React.FC = () => {
             </div>
 
             {/* Header Bar */}
-            <header className="w-full flex flex-row justify-center items-center px-2 py-1 shrink-0 gap-2 md:gap-4 mt-10 md:mt-6 mb-1 z-10 relative">
+            <header className="w-full flex flex-row justify-center items-center px-2 py-1 shrink-0 gap-2 md:gap-4 mt-8 md:mt-2 mb-0.5 z-10 relative">
                 <Tooltip content="Current Score">
-                    <div className="bg-yellow-400 text-yellow-900 font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center border-2 border-yellow-300 cursor-help">
-                        <span className="mr-1.5 text-lg">⭐</span> {score}
+                    <div className="bg-yellow-400 text-yellow-900 font-bold text-xs md:text-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg shadow-md flex items-center border-2 border-yellow-300 cursor-help">
+                        <span className="mr-1 text-sm md:text-base">⭐</span> {score}
                     </div>
                 </Tooltip>
                 
                 <Tooltip content="Words Solved">
-                    <div className="bg-green-400 text-green-900 font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center border-2 border-green-300 cursor-help">
-                        <span className="mr-1.5 text-lg">📚</span> {wordsSolved}
+                    <div className="bg-green-400 text-green-900 font-bold text-xs md:text-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg shadow-md flex items-center border-2 border-green-300 cursor-help">
+                        <span className="mr-1 text-sm md:text-base">📚</span> {wordsSolved}
                     </div>
                 </Tooltip>
                 
                 <Tooltip content="Winning Streak">
-                    <div className="bg-orange-400 text-orange-900 font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center border-2 border-orange-300 cursor-help">
-                        <span className="mr-1.5 text-lg">🔥</span> {streak}
+                    <div className="bg-orange-400 text-orange-900 font-bold text-xs md:text-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg shadow-md flex items-center border-2 border-orange-300 cursor-help">
+                        <span className="mr-1 text-sm md:text-base">🔥</span> {streak}
                     </div>
                 </Tooltip>
 
                 <Tooltip content="Time Remaining">
-                    <div className={`${isLowTime && isTimerEnabled ? 'bg-red-500 text-white animate-pulse' : 'bg-blue-400 text-blue-900'} font-bold text-sm md:text-lg px-3 py-1.5 md:px-5 md:py-2 rounded-xl shadow-md flex items-center transition-colors duration-300 border-2 border-blue-300 ${!isTimerEnabled ? 'opacity-50 grayscale' : ''} cursor-help`}>
-                        <span className="mr-1.5 text-lg">⏰</span> {isTimerEnabled ? formatTime(timeLeft) : '--:--'}
+                    <div className={`${isLowTime && isTimerEnabled ? 'bg-red-500 text-white animate-pulse' : 'bg-blue-400 text-blue-900'} font-bold text-xs md:text-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg shadow-md flex items-center transition-colors duration-300 border-2 border-blue-300 ${!isTimerEnabled ? 'opacity-50 grayscale' : ''} cursor-help`}>
+                        <span className="mr-1 text-sm md:text-base">⏰</span> {isTimerEnabled ? formatTime(timeLeft) : '--:--'}
                     </div>
                 </Tooltip>
                 
                 <div className="flex gap-1 ml-1">
                     <Tooltip content="Statistics">
-                        <button onClick={() => setShowStats(true)} className="p-1.5 hover:bg-blue-100 rounded-full text-lg" title="Stats">📊</button>
+                        <button onClick={() => setShowStats(true)} className="p-1 hover:bg-blue-100 rounded-full text-base" title="Stats">📊</button>
                     </Tooltip>
                     <Tooltip content="Word History">
-                        <button onClick={() => setShowHistory(true)} className="p-1.5 hover:bg-blue-100 rounded-full text-lg" title="History">📜</button>
+                        <button onClick={() => setShowHistory(true)} className="p-1 hover:bg-blue-100 rounded-full text-base" title="History">📜</button>
                     </Tooltip>
                 </div>
             </header>
 
             {/* Main Game Vertical Stack */}
-            <main className="flex flex-col items-center w-full max-w-2xl px-2 grow h-full overflow-hidden z-10 relative justify-center">
+            <main className="flex flex-col items-center w-full max-w-2xl px-2 grow h-full overflow-hidden z-10 relative justify-start md:justify-center">
                 
                 {/* 1. Hangman Figure */}
-                <div className="flex flex-col items-center shrink-0 mb-1">
+                <div className="flex flex-col items-center shrink-0 mb-0.5">
                     <HangmanFigure 
                         wrongGuesses={guessedLetters.incorrect.length} 
                         maxGuesses={currentSettings.maxGuesses}
                     />
                     <IncorrectGuesses incorrectLetters={guessedLetters.incorrect} />
-                    <div className="text-[10px] text-gray-500 font-bold bg-white/50 px-2 py-0.5 rounded-full mt-0.5">
+                    <div className="text-[9px] text-gray-500 font-bold bg-white/50 px-2 py-0.5 rounded-full mt-0">
                         {currentSettings.maxGuesses - guessedLetters.incorrect.length} Attempts Left
                     </div>
                 </div>
 
                 {/* 2. Word Display & Hint */}
-                <div className="flex flex-col items-center w-full mb-2 shrink-0">
+                <div className="flex flex-col items-center w-full mb-1 shrink-0">
                      <WordDisplay 
                         word={currentWord.word} 
                         correctGuesses={guessedLetters.correct} 
@@ -502,7 +502,7 @@ const App: React.FC = () => {
                      <button
                         onClick={handleHintClick}
                         disabled={score < HINT_COST}
-                        className={`mt-0.5 flex items-center gap-2 px-2 py-0.5 rounded-full font-bold shadow-sm transition-all transform text-[10px] md:text-xs
+                        className={`mt-0.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full font-bold shadow-sm transition-all transform text-[9px] md:text-[10px]
                             ${score >= HINT_COST 
                                 ? 'bg-purple-100 text-purple-700 border border-purple-300 hover:bg-purple-200 hover:scale-105' 
                                 : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'}`}
@@ -512,18 +512,18 @@ const App: React.FC = () => {
                 </div>
 
                 {/* 3. Definition (Below Word) */}
-                <div className="bg-white/90 backdrop-blur-sm p-2 md:p-3 rounded-xl shadow-md border-2 border-blue-100 w-full max-w-lg mb-1 relative flex flex-col items-center justify-center shrink-0 transition-all duration-300">
-                        <h3 className="text-gray-400 text-[9px] uppercase font-bold mb-1 tracking-wider">Definition</h3>
-                        <p className="text-sm md:text-base text-blue-900 font-medium leading-snug text-center px-2 mb-2 max-h-24 overflow-y-auto custom-scrollbar">
+                <div className="bg-white/90 backdrop-blur-sm p-1.5 md:p-2 rounded-xl shadow-md border-2 border-blue-100 w-full max-w-lg mb-1 relative flex flex-col items-center justify-center shrink-0 transition-all duration-300">
+                        <h3 className="text-gray-400 text-[9px] uppercase font-bold mb-0.5 tracking-wider">Definition</h3>
+                        <p className="text-xs md:text-sm text-blue-900 font-medium leading-snug text-center px-2 mb-1.5 max-h-20 overflow-y-auto custom-scrollbar">
                         {currentWord.definition}
                         </p>
 
-                        <div className="w-full flex justify-center border-t border-blue-50 pt-1 mt-0.5">
+                        <div className="w-full flex justify-center border-t border-blue-50 pt-1 mt-0">
                             <button
                             onClick={handleSkip}
                             disabled={!isSkipAvailable}
                             className={`
-                                flex items-center gap-1.5 px-4 py-1 rounded-full font-bold text-[10px] md:text-xs uppercase tracking-wider shadow-sm transition-all
+                                flex items-center gap-1 px-3 py-0.5 rounded-full font-bold text-[9px] md:text-[10px] uppercase tracking-wider shadow-sm transition-all
                                 ${isSkipAvailable 
                                     ? 'bg-orange-100 text-orange-700 border border-orange-300 hover:bg-orange-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer ring-2 ring-orange-200/50' 
                                     : 'bg-slate-50 text-slate-300 border border-slate-100 cursor-not-allowed'}
@@ -537,7 +537,7 @@ const App: React.FC = () => {
                 </div>
 
                 {/* 4. Keyboard (Bottom) */}
-                <div className="mt-auto w-full pb-5 md:pb-8 shrink-0">
+                <div className="mt-2 w-full pb-2 md:pb-4 shrink-0">
                      <Keyboard onGuess={handleGuess} guessedLetters={guessedLetters} />
                 </div>
             </main>
