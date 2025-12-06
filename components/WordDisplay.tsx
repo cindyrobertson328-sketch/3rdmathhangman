@@ -18,9 +18,9 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ word, correctGuesses, reveale
         // If it's not a letter (e.g. space in "WHOLE NUMBER"), render a separator
         if (!isLetter) {
            return (
-             <div key={index} className="flex items-center justify-center w-2 md:w-4 h-6 md:h-10">
+             <div key={index} className="flex items-center justify-center w-2 md:w-3 h-5 md:h-8">
                 {/* Visually hidden but structurally present, or just a gap */}
-                {letter === ' ' ? <span className="w-full"></span> : <span className="text-base font-bold text-blue-800">{letter}</span>}
+                {letter === ' ' ? <span className="w-full"></span> : <span className="text-sm font-bold text-blue-800">{letter}</span>}
              </div>
            );
         }
@@ -39,7 +39,7 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ word, correctGuesses, reveale
         return (
           <span
             key={index}
-            className={`flex items-center justify-center w-6 h-8 md:w-8 md:h-10 text-base md:text-xl font-bold rounded shadow-sm md:shadow-md border-b-2 md:border-b-4 transition-all duration-500 ${stateClasses}`}
+            className={`flex items-center justify-center w-5 h-7 md:w-7 md:h-9 text-sm md:text-lg font-bold rounded shadow-sm md:shadow-md border-b-2 md:border-b-4 transition-all duration-500 ${stateClasses}`}
           >
             {isGuessed ? letter : '_'}
           </span>

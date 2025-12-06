@@ -16,7 +16,7 @@ const Keyboard: React.FC<KeyboardProps> = ({ onGuess, guessedLetters }) => {
         const isGuessed = guessedLetters.correct.includes(letter) || guessedLetters.incorrect.includes(letter);
         const isCorrect = guessedLetters.correct.includes(letter);
         
-        const baseClass = "w-6 h-7 md:w-7 md:h-8 text-xs md:text-sm font-bold rounded shadow-sm transition-all duration-200 transform";
+        const baseClass = "w-5 h-6 md:w-6 md:h-7 text-[10px] md:text-xs font-bold rounded shadow-sm transition-all duration-200 transform";
         
         const stateClass = isGuessed
           ? (isCorrect 

@@ -441,8 +441,8 @@ const App: React.FC = () => {
                <ToggleSwitch label="⏱️" isChecked={isTimerEnabled} onChange={setIsTimerEnabled} />
             </div>
 
-            {/* Header Bar */}
-            <header className="w-full flex flex-row justify-center items-center px-2 py-1 shrink-0 gap-2 md:gap-4 mt-8 md:mt-2 mb-0.5 z-10 relative">
+            {/* Header Bar - Reduced top margin */}
+            <header className="w-full flex flex-row justify-center items-center px-2 py-1 shrink-0 gap-2 md:gap-4 mt-2 mb-0.5 z-10 relative">
                 <Tooltip content="Current Score">
                     <div className="bg-yellow-400 text-yellow-900 font-bold text-xs md:text-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg shadow-md flex items-center border-2 border-yellow-300 cursor-help">
                         <span className="mr-1 text-sm md:text-base">⭐</span> {score}
@@ -477,7 +477,7 @@ const App: React.FC = () => {
                 </div>
             </header>
 
-            {/* Main Game Vertical Stack */}
+            {/* Main Game Vertical Stack - Reduced gap */}
             <main className="flex flex-col items-center w-full max-w-2xl px-2 grow h-full overflow-hidden z-10 relative justify-start md:justify-center">
                 
                 {/* 1. Hangman Figure */}
@@ -536,8 +536,8 @@ const App: React.FC = () => {
                         </div>
                 </div>
 
-                {/* 4. Keyboard (Bottom) */}
-                <div className="mt-2 w-full pb-2 md:pb-4 shrink-0">
+                {/* 4. Keyboard (Bottom) - Increased padding bottom, reduced margin top */}
+                <div className="mt-1 w-full pb-6 md:pb-10 shrink-0">
                      <Keyboard onGuess={handleGuess} guessedLetters={guessedLetters} />
                 </div>
             </main>
